@@ -195,6 +195,49 @@
                     `<p>提交数据时出错</p ><p><strong>错误信息</strong>: ${error}</p >`;
             })
         }, 2000))
+    document.getElementById('asyncFetchButton').addEventListener('click', debounce(async function () {
+    try {
+        // 使用async/await 发送get请求
+        const response = await axios.get(
+            'https://s5.360game.360.cn/to5/mini/v21/category.html');
+        console.log(response, 'asyncresrererer+-------------');
+        const gkeys = response.data.data;
+        console.log(gkeys, '9999999999999999999999');
+        const resultDiv = document.getElementById('asyncGetResult');
+        resultDiv.innerHTML = '<h2>Users Gkey Found:</h2><ul>' + gkeys.map(gkey =>
+            `<li>${gkey.gkey}</li>`).join('') + '</ul>';
+    } catch (error) {
+        console.error('get请求失败:', error);
+        document.getElementById('asyncGetResult').innerHTML =
+            `<p>获取数据时出错</p ><p><strong>错误信息</strong>: ${error.messages}</p >`;
+    }
+}, 1000));
+    document.getElementById('asyncPostButton').addEventListener('click', throttle(async function () {
+    try {
+        const title = document.getElementById('asyncTitleInput').value || '默认标题';
+        const body = document.getElementById('asyncBodyInput').value || '默认内容';
+
+        const postData = {
+            title: title,
+            body: body,
+            userId: 2
+        }
+
+        const response = await axios.post('https://jsonplaceholder.typicode.com/posts',
+            postData);
+        console.log("async post成功-/-/-/-/-/-/-/-/-", response.data);
+        const postResultDiv = document.getElementById('asyncPostResult');
+        postResultDiv.innerHTML =
+            `<h3>Post结果</h3>  <p><strong>响应状态: </strong>${response.status}</p >
+<p><strong>响应id:</strong>${response.data.id}</p >
+<p><strong>响应title:</strong>${response.data.title}</p >
+<p><strong>响应body:</strong>${response.data.body}</p >`;
+    } catch (error) {
+        console.error('post请求失败:', error);
+        document.getElementById('asyncPostResult').innerHTML =
+            `<p>提交数据时出错</p ><p><strong>错误信息</strong>: ${error.messages}</p >`;
+    }
+}, 2000))
     </script>
 
 </body>
